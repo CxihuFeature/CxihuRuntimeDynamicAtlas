@@ -13,6 +13,7 @@ public class UITest : MonoBehaviour
     Text textLog;
     public RawImage[] rawImageArry;
     public string[] filesArry;
+    public UnityEngine.Object[] Resoucestextures;
     public string[] filesNameArry;
     Transform RawImagPanel;
     // Start is called before the first frame update
@@ -23,22 +24,24 @@ public class UITest : MonoBehaviour
         textLog = transform.Find("TextLog").GetComponent<Text>();
         RawImagPanel = transform.Find("RawImagPanel");
         rawImageArry = RawImagPanel.GetComponentsInChildren<RawImage>();
-        filesArry = Directory.GetFiles(Application.dataPath + "/Resources/major", "*.png");
-        filesNameArry = new string[filesArry.Length];
-        for (int i = 0; i < filesArry.Length; i++)
+        Resoucestextures = Resources.LoadAll("major", typeof(Texture));
+        filesNameArry = new string[Resoucestextures.Length];
+        for (int i = 0; i < Resoucestextures.Length; i++)
         {
-            filesNameArry[i] = Path.Combine("major", Path.GetFileNameWithoutExtension(filesArry[i]));
+            // filesNameArry[i] = "major/" + Path.GetFileNameWithoutExtension(filesArry[i]);
+            filesNameArry[i] = "major/" + Resoucestextures[i].name;
         }
 
-        //  StartSet();
-        StartCoroutine(StartSet2());
+        StartSet();
+        // StartCoroutine(StartSet2());
     }
 
     void StartSet()
     {
         for (int i = 0; i < rawImageArry.Length; i++)
         {
-            rawImageArry[i].texture = Resources.Load<Texture>(filesNameArry[i]);
+            //rawImageArry[i].texture = Resources.Load<Texture>(filesNameArry[i]);
+            rawImageArry[i].texture = (Texture)Resoucestextures[i];
         }
     }
     IEnumerator StartSet2()
@@ -62,8 +65,9 @@ public class UITest : MonoBehaviour
     void buttonOnClick()
     {
         startTime = DateTime.Now;
-        // LoadRawImagesResources(rawImageArry, filesNameArry);
-        StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
+        //RawImagesPackTexture(rawImageArry);
+        LoadRawImagesResources(rawImageArry, filesNameArry);
+        // StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
         endTime = DateTime.Now;
         textLog.text = "DateTime:" + (endTime - startTime).Milliseconds + "ms";
     }
@@ -73,6 +77,22 @@ public class UITest : MonoBehaviour
 
     }
 
+
+    public void RawImagesPackTexture(RawImage[] rawImagesArry, Texture[] textures = null)
+    {
+        for (int i = 0; i < rawImagesArry.Length; i++)
+        {
+            if (textures != null)
+            {
+                // 将贴图打包到图集，并应用到RawImage控件
+                rawImagesArry[i].PackTexture(textures[i]);
+            }
+            else
+            {
+                rawImagesArry[i].PackTexture(rawImagesArry[i].texture);
+            }
+        }
+    }
     public void LoadRawImageResources(RawImage rawImage, string file)
     {
         // 同步加载贴图
