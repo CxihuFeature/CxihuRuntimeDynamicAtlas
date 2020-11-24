@@ -30,8 +30,8 @@ public class UITest : MonoBehaviour
             filesNameArry[i] = Path.Combine("major", Path.GetFileNameWithoutExtension(filesArry[i]));
         }
 
-        StartSet();
-
+        //  StartSet();
+        StartCoroutine(StartSet2());
     }
 
     void StartSet()
@@ -39,6 +39,21 @@ public class UITest : MonoBehaviour
         for (int i = 0; i < rawImageArry.Length; i++)
         {
             rawImageArry[i].texture = Resources.Load<Texture>(filesNameArry[i]);
+        }
+    }
+    IEnumerator StartSet2()
+    {
+        for (int i = 0; i < rawImageArry.Length; i++)
+        {
+            using (UnityWebRequest unityWebRequest = UnityWebRequestTexture.GetTexture(filesArry[i]))
+            {
+                yield return unityWebRequest.SendWebRequest();
+                if (!unityWebRequest.isNetworkError && !unityWebRequest.isHttpError)
+                {
+                    var texture = DownloadHandlerTexture.GetContent(unityWebRequest);
+                    rawImageArry[i].texture = texture;
+                }
+            }
         }
     }
 
