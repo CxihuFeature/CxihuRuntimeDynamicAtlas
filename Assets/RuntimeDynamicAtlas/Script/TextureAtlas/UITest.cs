@@ -11,11 +11,13 @@ public class UITest : MonoBehaviour
 {
     Button button;
     Text textLog;
-    public RawImage[] rawImageArry;
-    public string[] filesArry;
-    public UnityEngine.Object[] Resoucestextures;
-    public string[] filesNameArry;
     Transform RawImagPanel;
+    public RawImage[] rawImageArry;
+
+    public UnityEngine.Object[] Resoucestextures;
+    public string[] ResoucesfilesNameArry;
+    public string[] filesArry;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,13 +26,17 @@ public class UITest : MonoBehaviour
         textLog = transform.Find("TextLog").GetComponent<Text>();
         RawImagPanel = transform.Find("RawImagPanel");
         rawImageArry = RawImagPanel.GetComponentsInChildren<RawImage>();
+        //Resources
         Resoucestextures = Resources.LoadAll("major", typeof(Texture));
-        filesNameArry = new string[Resoucestextures.Length];
+        ResoucesfilesNameArry = new string[Resoucestextures.Length];
         for (int i = 0; i < Resoucestextures.Length; i++)
         {
             // filesNameArry[i] = "major/" + Path.GetFileNameWithoutExtension(filesArry[i]);
-            filesNameArry[i] = "major/" + Resoucestextures[i].name;
+            ResoucesfilesNameArry[i] = "major/" + Resoucestextures[i].name;
         }
+
+        //streamingAssetsPath
+        filesArry = Directory.GetFiles(Application.streamingAssetsPath + "/shiwu", "*.png");
 
         StartSet();
         // StartCoroutine(StartSet2());
@@ -66,8 +72,8 @@ public class UITest : MonoBehaviour
     {
         startTime = DateTime.Now;
         //RawImagesPackTexture(rawImageArry);
-        LoadRawImagesResources(rawImageArry, filesNameArry);
-        // StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
+        // LoadRawImagesResources(rawImageArry, ResoucesfilesNameArry);
+        StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
         endTime = DateTime.Now;
         textLog.text = "DateTime:" + (endTime - startTime).Milliseconds + "ms";
     }
