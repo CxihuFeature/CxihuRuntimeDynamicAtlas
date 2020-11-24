@@ -46,7 +46,7 @@ public class UITest : MonoBehaviour
     {
         for (int i = 0; i < rawImageArry.Length; i++)
         {
-            //rawImageArry[i].texture = Resources.Load<Texture>(filesNameArry[i]);
+            //rawImageArry[i].texture = Resources.Load<Texture>(ResoucesfilesNameArry[i]);
             rawImageArry[i].texture = (Texture)Resoucestextures[i];
         }
     }
