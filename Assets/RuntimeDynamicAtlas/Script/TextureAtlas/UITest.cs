@@ -9,7 +9,9 @@ using UnityEngine.Networking;
 
 public class UITest : MonoBehaviour
 {
-    Button button;
+    Button button1;
+    Button button2;
+    Button button3Reset;
     Text textLog;
     Transform RawImagPanel;
     public RawImage[] rawImageArry;
@@ -21,8 +23,12 @@ public class UITest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        button = transform.Find("Button").GetComponent<Button>();
-        button.onClick.AddListener(buttonOnClick);
+        button1 = transform.Find("Button1").GetComponent<Button>();
+        button1.onClick.AddListener(button1OnClick);
+        button2 = transform.Find("Button2").GetComponent<Button>();
+        button2.onClick.AddListener(button2OnClick);
+        button3Reset = transform.Find("Button3").GetComponent<Button>();
+        button3Reset.onClick.AddListener(button3ResetOnClick);
         textLog = transform.Find("TextLog").GetComponent<Text>();
         RawImagPanel = transform.Find("RawImagPanel");
         rawImageArry = RawImagPanel.GetComponentsInChildren<RawImage>();
@@ -48,6 +54,7 @@ public class UITest : MonoBehaviour
         {
             //rawImageArry[i].texture = Resources.Load<Texture>(ResoucesfilesNameArry[i]);
             rawImageArry[i].texture = (Texture)Resoucestextures[i];
+            rawImageArry[i].uvRect = new Rect(0, 0, 1, 1);
         }
     }
     IEnumerator StartSet2()
@@ -68,14 +75,24 @@ public class UITest : MonoBehaviour
 
     DateTime startTime;
     DateTime endTime;
-    void buttonOnClick()
+    void button1OnClick()
     {
         startTime = DateTime.Now;
         //RawImagesPackTexture(rawImageArry);
-        // LoadRawImagesResources(rawImageArry, ResoucesfilesNameArry);
-        StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
+        LoadRawImagesResources(rawImageArry, ResoucesfilesNameArry);
+        // StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
         endTime = DateTime.Now;
         textLog.text = "DateTime:" + (endTime - startTime).Milliseconds + "ms";
+    }
+
+    void button2OnClick()
+    {
+        StartCoroutine(LoadRawImagesFromFile(rawImageArry, filesArry));
+    }
+
+    void button3ResetOnClick()
+    {
+        StartSet();
     }
     // Update is called once per frame
     void Update()
